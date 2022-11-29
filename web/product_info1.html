@@ -1,0 +1,105 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="user/js/loadDoc.js"> </script>
+   <!-- <script>
+        function loadDoc() {
+          var xhttp = new XMLHttpRequest();
+          xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 404) {
+              const obj = JSON.parse(this.responseText)
+              document.getElementById("demo").innerHTML =
+              "<font color=red>"+obj.error+"</font>";
+            }
+            if (this.readyState == 4 && this.status == 200) {
+              document.getElementById("demo").innerHTML =
+              this.responseText;
+            }
+          };
+
+          xhttp.open("POST", "/LoginProject/AddCart", true);
+          xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+          xhttp.send("name=item1288431&quantity="+ document.getElementById("quantity").value);
+        }
+    </script>-->
+    <title>title</title>
+    <style>
+      body {
+        margin: 100px;
+        margin: 30 auto;
+        background-image:url('img/1288431.jpg');
+    background-size:120% 180%;
+    background-repeat: no-repeat;
+      }
+
+    #item_info{
+    padding:10px;
+    border:1px solid #e7dbb1;
+    width:330px;margin:15px 0 10px 0;
+    background-color: #cc9900;
+    }
+      .carousel-inner .item img {
+        width: 100%;
+        height: 300px;
+      }
+
+    </style>
+</head>
+<body>
+<div class="col-md-6">
+    <div>
+        <strong>Set of 2 Table Lamp</strong>
+    </div>
+    <div style="border-bottom: 1px dotted ;width:500px; margin:10px 0 10px 0;">
+        <div>Item Number: 1288431</div>
+    </div>
+    <div style="margin:10px 0 10px 0;">
+        <strong style="color:blue">Unit Price: $69.99
+        </strong><br><br>
+        <strong>Original Price
+            <del>$99.99</del>
+        </strong>
+
+
+
+    </div>
+    <div id="item_info">
+        <div style="margin:5px 0 10px 0;">Color: Polished Chrome</div>
+
+        <!--这里要跳转到addCartServlet页面-->
+        <form action="/LoginProject/AddCart" method="post">
+
+            <div style="border-bottom: 1px solid #faeac7;margin-top:20px;padding-left: 10px;">
+                Purchase quantity:
+            <input id="quantity"
+                   name="quantity"
+                   value="1" maxlength="4" size="10" type="text">
+             </div>
+        <div id="demo" style="margin:20px 0 10px 0;text-align: center;">
+                <input type="hidden" name="name" value="item1288431"/>
+                <input onclick="loadDoc()"
+                       style="background:yellow; height:36px; width:127px;"
+                       value="Add to Cart"
+                       type="button">
+        </div>
+        </form>
+
+
+    </div>
+</div>
+<div class="clear">
+</div>
+<div style="width:950px;margin:0 auto;">
+    <div style="background-color:#d3d3d3;width:500px;padding:10px 10px;margin:10px 0 10px 0;">
+        <strong>Product Information
+        </strong>
+    </div>
+    <div>
+        <img src="img/1288431.jpg" width="200" height="200">
+
+    </div>
+</div>
+</body>
+</html>
