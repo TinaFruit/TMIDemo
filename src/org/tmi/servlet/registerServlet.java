@@ -4,7 +4,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.tmi.DAO.UserDAO;
 import org.tmi.DAO.UserDAOImpl;
+import org.tmi.Utils.HTTPUtils;
 import org.tmi.Utils.JDBCUtils;
+import org.tmi.Utils.JsonUtils;
 import org.tmi.pojo.Message;
 import org.tmi.pojo.User;
 
@@ -24,26 +26,14 @@ public class registerServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         req.setCharacterEncoding("utf-8");
+        HTTPUtils.setResponseHeaders(resp);
 
-        StringBuffer jb = new StringBuffer();
-        String line = null;
         String username = null;
         String password = null;
 
-        try {
-            BufferedReader reader = req.getReader();
-            while ((line = reader.readLine()) != null)
-                jb.append(line);
-        } catch (Exception e) { /*report an error*/ }
-
-        try {
-            JSONObject jsonObject =  new JSONObject(jb.toString());
-            username =  jsonObject.getString("username");
-             password =   jsonObject.getString("password");
-        } catch (JSONException e) {
-            // crash and burn
-            throw new IOException("Error parsing JSON request string");
-        }
+        JSONObject jo = JsonUtils.getJsonObject(req);
+        username = jo.getString("username");
+        password = jo.getString("password");
 
         /*String username = req.getParameter("username");
         String password = req.getParameter("password");*/
@@ -53,13 +43,12 @@ public class registerServlet extends HttpServlet {
         try {
             user = udao.getSingleUser(username);
             if(user != null){
-                resp.setStatus(403);
+                resp.setStatus(HTTPUtils.STATUS_403);
 
                 Message msg = new Message();
                 msg.setMessage("username exist.");
                 JSONObject jobj = new JSONObject(msg);
 
-                resp.setContentType("application/json");
                 resp.getWriter().write(jobj.toString());
 
                 return;
@@ -68,13 +57,12 @@ public class registerServlet extends HttpServlet {
 
         } catch (Exception e) {
             e.printStackTrace();
-            resp.setStatus(500);
+            resp.setStatus(HTTPUtils.STATUS_500);
 
            Message msg = new Message();
             msg.setMessage("Unexpected server error.");
             JSONObject jobj = new JSONObject(msg);
 
-            resp.setContentType("application/json");
             resp.getWriter().write(jobj.toString());
             return;
         }
@@ -84,7 +72,6 @@ public class registerServlet extends HttpServlet {
             msg.setMessage("Please enter your username or password.");
             JSONObject jobj = new JSONObject(msg);
 
-            resp.setContentType("application/json");
             resp.getWriter().write(jobj.toString());
             return;
         }
@@ -93,7 +80,6 @@ public class registerServlet extends HttpServlet {
         msg.setMessage("Thanks for your registration.");
         JSONObject jobj = new JSONObject(msg);
 
-        resp.setContentType("application/json");
         resp.getWriter().write(jobj.toString());
     }
 }

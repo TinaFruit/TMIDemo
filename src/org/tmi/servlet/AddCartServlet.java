@@ -1,7 +1,11 @@
 package org.tmi.servlet;
 
+import org.json.JSONObject;
 import org.tmi.DAO.UserDAO;
 import org.tmi.DAO.UserDAOImpl;
+import org.tmi.Utils.HTTPUtils;
+import org.tmi.Utils.JsonUtils;
+import org.tmi.pojo.Message;
 import org.tmi.pojo.User;
 
 import javax.servlet.ServletException;
@@ -17,16 +21,22 @@ import java.util.Map;
 //@WebServlet("/servlet3test")
 public class AddCartServlet extends HttpServlet{
 
-
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("utf-8");
-        String name = req.getParameter("name");
+        String name;
+
+        JSONObject jo = JsonUtils.getJsonObject(req);
+        name = jo.getString("name");
+
+        HTTPUtils.setResponseHeaders(resp);
         if(name == null)
         {
-            resp.setStatus(404);
-            resp.setContentType("application/json");
-            resp.getWriter().write("{\"error\":\"Name cannot be null\"}");
+            resp.setStatus(HTTPUtils.STATUS_404);
+            Message msg = new Message();
+            msg.setMessage("Name cannot be null");
+            JSONObject jobj = new JSONObject(msg);
+            resp.getWriter().write(jobj.toString());
             return;
         }
 
@@ -63,11 +73,11 @@ public class AddCartServlet extends HttpServlet{
     //将商品以及数量等新数据放入购物车
             map.put(name,count);
         //3.提示信息
-        PrintWriter w = resp.getWriter();
-        resp.addHeader("Content-type","text/html");
-        w.print("Added<b>"+name+"</b>to the Cart<hr>");
-        w.print("<a href='"+req.getContextPath()+"/welcome.jsp'>Continue shopping</a>&nbsp;&nbsp;&nbsp;&nbsp;");
-        w.print("<a href='"+req.getContextPath()+"/cart.jsp'>Go to Cart</a>&nbsp;&nbsp;&nbsp;&nbsp;");
+
+       JSONObject jobj = new JSONObject();
+       jobj.put("itemName",name);
+
+         resp.getWriter().write(jobj.toString());
     }
 
 
